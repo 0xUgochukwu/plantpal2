@@ -7,10 +7,13 @@ import 'package:plant_app/data.dart';
 import 'package:plant_app/screens/plant_details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  final String uid;
   const HomeScreen({
+    required this.uid,
     Key? key}) : super(key: key);
 
   static const String id = 'HomeScreen';
+
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -18,10 +21,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selected = 0;
-
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> fetchUserDetails(String uid) async {
+    try {
+      DocumentSnapshot snapshot = await _firestore.collection('users').doc(uid).get();
+      if (snapshot.exists) {
+        // User details retrieved successfully
+        Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+        print('User Details: $userData');
+      } else {
+        print('User not found');
+      }
+    } catch (e) {
+      print('Error fetching user details: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
+    fetchUserDetails(widget.uid);
     return SafeArea(
       child: Scaffold(
         body: Container(

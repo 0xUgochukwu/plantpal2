@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         LoginScreen.id: (context) => const LoginScreen(),
         SignupScreen.id: (context) => SignupScreen(),
         MainScreen.id: (context) => const MainScreen(uid: ''),
-        HomeScreen.id: (context) => const HomeScreen(),
+        HomeScreen.id: (context) => const HomeScreen(uid: ''),
         CartScreen.id: (context) => const CartScreen(),
       },
     );

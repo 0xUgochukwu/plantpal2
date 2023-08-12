@@ -6,6 +6,7 @@ import 'package:plant_app/components/curve.dart';
 import 'package:plant_app/constants.dart';
 import 'package:plant_app/screens/main_screen.dart';
 import 'package:plant_app/screens/signup_screen.dart';
+import '../auth/login_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -20,8 +21,15 @@ class _LoginScreenState extends State<LoginScreen> {
   bool rememberMe = false;
   String username = '';
   String password = '';
-  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+
+  void _submitLoginForm(BuildContext context) {
+    String email = emailController.text;
+    String password = passwordController.text;
+    login(context, email, password);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,13 +106,13 @@ class _LoginScreenState extends State<LoginScreen> {
                       Column(
                         children: [
                           CustomTextField(
-                            hintText: 'Username',
+                            hintText: 'Email',
                             icon: Icons.person,
                             keyboardType: TextInputType.name,
-                            controller: usernameController,
+                            controller: emailController,
                             validate: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter a valid username';
+                                return 'Please enter a valid Email';
                               }
                               return null;
                             },
@@ -185,10 +193,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             AuthenticationButton(
                               label: 'Log In',
                               onPressed: () {
-                                if (username.toLowerCase() == 'admin' &&
-                                    password == 'idk123!') {
-                                  Navigator.pushNamed(context, MainScreen.id);
-                                }
+                                // if (username.toLowerCase() == 'admin' &&
+                                //     password == 'idk123!') {
+                                //   Navigator.pushNamed(context, MainScreen.id);
+                                // }
+                                _submitLoginForm(context);
                               },
                             ),
                             Padding(
