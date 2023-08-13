@@ -6,6 +6,8 @@ import 'package:plant_app/constants.dart';
 import 'package:plant_app/data.dart';
 import 'package:plant_app/screens/plant_details_screen.dart';
 import '../models/fetch_user_details.dart';
+import '../models/plant.dart';
+import '../repository/plant_repository.dart';
 class HomeScreen extends StatefulWidget {
   final String uid;
   const HomeScreen({
@@ -23,14 +25,15 @@ class _HomeScreenState extends State<HomeScreen> {
   int selected = 0;
   Map<String,dynamic>? userData;
   String? userName;
+  List<Plant>? plants;
 
   @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder<Map<String,dynamic>>(
       future: fetchUserDetails(widget.uid),
       builder: (context, snapshot) {
@@ -50,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           userData = snapshot.data;
           userName = userData!['username'];
           print('User Details: $userData}');
+
           return SafeArea(
             child: Scaffold(
               body: Container(
@@ -143,38 +147,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                   alignment: Alignment.bottomCenter,
                                   child: SizedBox(
                                     height: 220.0,
-                                    child: ListView.separated(
-                                      clipBehavior: Clip.none,
-                                      scrollDirection: Axis.horizontal,
-                                      shrinkWrap: true,
-                                      itemCount: recommended.length,
-                                      separatorBuilder: (context, index) {
-                                        return const SizedBox(width: 20.0);
-                                      },
-                                      itemBuilder: (context, index) {
-                                        return PlantCard(
-                                          plantType: recommended[index].plantType,
-                                          plantName: recommended[index].plantName,
-                                          plantPrice: recommended[index].plantPrice,
-                                          image: Image.asset(
-                                            recommended[index].image,
-                                            alignment: Alignment.topLeft,
-                                          ),
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) {
-                                                  return PlantDetails(
-                                                    plant: recommended[index],
+                                    child: FutureBuilder<List<Plant>>(
+                                        future: PlantRepository().fetchAllPlants(),
+                                        builder: (context, snapshot) {
+                                        if (snapshot.connectionState == ConnectionState.waiting) {
+                                        return CircularProgressIndicator();
+                                        } else if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                        } else {
+                                        plants = snapshot.data!;
+                                        return ListView.separated(
+                                          clipBehavior: Clip.none,
+                                          scrollDirection: Axis.horizontal,
+                                          shrinkWrap: true,
+                                          itemCount: plants!.length,
+                                          separatorBuilder: (context, index) {
+                                            return const SizedBox(width: 20.0);
+                                          },
+                                          itemBuilder: (context, index) {
+                                            return
+                                              PlantCard(
+                                                plantType: plants?[index].plantType ?? '',
+                                                plantName: plants?[index].plantName ?? '',
+                                                plantPrice: plants?[index].plantPrice ?? 0,
+                                                image: Image.asset(
+                                                  recommended[index].image,
+                                                  alignment: Alignment.topLeft,
+                                                ),
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return PlantDetails(
+                                                          plant: recommended[index],
+                                                        );
+                                                      },
+                                                    ),
                                                   );
                                                 },
-                                              ),
-                                            );
+                                              );
                                           },
                                         );
-                                      },
-                                    ),
+                                        }
+                                  },
+                                  )
                                   ),
                                 ),
                                 Padding(

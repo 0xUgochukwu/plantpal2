@@ -43,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
 
     void logout() async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.remove('token'); // Remove the stored token
+      await prefs.clear(); // Remove the stored token
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginScreen()),

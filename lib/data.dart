@@ -1,7 +1,7 @@
 import 'package:plant_app/models/cart_item.dart';
 import 'package:plant_app/models/plant.dart';
 import 'package:plant_app/models/recently_viewed.dart';
-
+Future<List<Plant>>? allPlants;
 List<Plant> recommended = [
   Plant(
     plantType: 'Indoor',
