@@ -8,6 +8,9 @@ import 'package:plant_app/constants.dart';
 
 
 class ProfileScreen extends StatelessWidget {
+  final String uid;
+
+  ProfileScreen({required this.uid});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +60,8 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: 10),
+
             SizedBox(height: 20),
             ProfileMenu(
               text: "Edit Profile",
@@ -64,6 +69,11 @@ class ProfileScreen extends StatelessWidget {
               press: () => {
               showModalBottomSheet(context: context,isScrollControlled: true, builder: (__)=> const Form())
               },
+            ),
+            ProfileMenu(
+              text: "Payment Information",
+              icon: "images/icons/credit-card.svg",
+              press: () {},
             ),
             ProfileMenu(
               text: "Help Center",
