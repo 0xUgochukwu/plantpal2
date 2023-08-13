@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plant_app/components/bottom_nav_bar.dart';
 import 'package:plant_app/constants.dart';
+import 'package:plant_app/screens/admindash.dart';
 import 'package:plant_app/screens/cart_screen.dart';
 import 'package:plant_app/screens/home_screen.dart';
 import 'package:plant_app/screens/signup_screen.dart';
@@ -28,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
     selectedIndex = 0;
     screens = [
       HomeScreen(uid: widget.uid),
-      HomeScreen(uid: widget.uid),
+      AdminScreen(),
       CartScreen(),
       SignupScreen(),
     ];

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_app/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/home_screen.dart';
@@ -35,16 +36,36 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     }
   }
 
+
+  Future<String?> getIDToken() async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      String? idToken = await user.getIdToken();
+      return idToken;
+    } else {
+      return ''; // Return an empty string if user is not authenticated
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
       return CircularProgressIndicator(); // Show loading indicator
     } else {
-      if (_auth.currentUser != null) {
-        return HomeScreen(uid: '');
-      } else {
-        return LoginScreen();
-      }
+      return FutureBuilder<String?>(
+        future: getIDToken(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasData && snapshot.data != '') {
+            return MainScreen(uid: snapshot.data!);
+          } else {
+            return LoginScreen();
+          }
+        },
+      );
     }
   }
 }
+
+

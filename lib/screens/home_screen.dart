@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 textAlign: TextAlign.start,
                                 style: GoogleFonts.poppins(
                                   color: kDarkGreenColor,
-                                  fontSize: 32.0,
+                                  fontSize: 25.0,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
