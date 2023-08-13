@@ -14,16 +14,16 @@ Future<void> login(BuildContext context, String email, String password) async {
     String? authToken = await userCredential.user!.getIdToken();
     String userData = userCredential.user!.uid;
     print('Login successful: ${userCredential.user!.uid}');
-    // await storeToken(authToken!);
+    print("authToken: $authToken");
     Navigator.push(context, MaterialPageRoute(builder: (context)=>MainScreen(uid: userData)));
-  } catch (e) {
+  } on FirebaseAuthException catch (e) {
     print('Login failed: $e');
             //   AwesomeDialog(
             //       context: context,
             //       dialogType: DialogType.error,
             //       animType: AnimType.rightSlide,
             //       title: 'Invalid Password',
-            //       desc: '$e',
+            //       desc: '${e.message}',
             //       btnCancelOnPress: () {},
             // btnOkOnPress: () {},
             // ).show();

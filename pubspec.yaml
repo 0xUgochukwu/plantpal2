@@ -43,6 +43,7 @@ dependencies:
   cloud_firestore:
   shared_preferences:
 #  awesome_dialog:
+  jwt_decode:
 
 dev_dependencies:
   flutter_test:

@@ -3,11 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_app/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
-import '../screens/home_screen.dart';
+import '../screens/main_screen.dart';
 import '../screens/login_screen.dart';
 
 class AuthenticationWrapper extends StatefulWidget {
+  const AuthenticationWrapper({super.key});
+
   @override
   _AuthenticationWrapperState createState() => _AuthenticationWrapperState();
 }
@@ -35,8 +38,6 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
       });
     }
   }
-
-
   Future<String?> getIDToken() async {
     User? user = _auth.currentUser;
     if (user != null) {
@@ -45,6 +46,16 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     } else {
       return ''; // Return an empty string if user is not authenticated
     }
+  }
+  String? getUidFromIdToken(String idToken) {
+    try {
+      final Map<String, dynamic> decodedToken = Jwt.parseJwt(idToken);
+      final uid = decodedToken['sub'];
+      return uid;
+    } catch (e) {
+      print('Error decoding ID token: $e');
+    }
+    return null;
   }
 
   @override
@@ -56,9 +67,11 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         future: getIDToken(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasData && snapshot.data != '') {
-            return MainScreen(uid: snapshot.data!);
+            return CircularProgressIndicator(); // Show loading indicator while waiting for ID token
+          } else if (snapshot.hasData && snapshot.data != null) {
+            print(snapshot.data);
+            String? uid = getUidFromIdToken(snapshot.data!);
+            return MainScreen(uid: uid!);
           } else {
             return LoginScreen();
           }
