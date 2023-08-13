@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_app/auth/authentication_wrapper.dart';
 import 'package:plant_app/screens/cart_screen.dart';
 import 'package:plant_app/screens/home_screen.dart';
 import 'package:plant_app/screens/login_screen.dart';
@@ -9,7 +10,7 @@ import 'fingerprint_auth.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(),
+      home: const FingerprintScreen(),
       routes: {
         FingerprintScreen.id: (context) => const FingerprintScreen(),
         LoginScreen.id: (context) => const LoginScreen(),

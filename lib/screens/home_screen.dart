@@ -5,6 +5,9 @@ import 'package:plant_app/components/curve.dart';
 import 'package:plant_app/constants.dart';
 import 'package:plant_app/data.dart';
 import 'package:plant_app/screens/plant_details_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final String uid;
@@ -42,6 +45,14 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState(){
     super.initState();
     fetchUserDetails(widget.uid);
+  }
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token'); // Remove the stored token
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
   }
   @override
   Widget build(BuildContext context) {
@@ -111,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: kDarkGreenColor,
                                 iconSize: 26.0,
                                 splashRadius: 20.0,
-                                onPressed: () {},
+                                onPressed: logout,
                               ),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(color: kGinColor),

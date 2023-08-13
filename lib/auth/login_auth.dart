@@ -15,6 +15,7 @@ Future<void> login(BuildContext context, String email, String password) async {
     await storeToken(authToken!);
     String userData = userCredential.user!.uid;
     print('Login successful: ${userCredential.user!.uid}');
+    print("authToken: $authToken");
     Navigator.push(context, MaterialPageRoute(builder: (context)=>MainScreen(uid: userData)));
   } catch (e) {
     print('Login failed: $e');

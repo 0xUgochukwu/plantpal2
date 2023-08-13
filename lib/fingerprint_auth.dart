@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:plant_app/auth/authentication_wrapper.dart';
 import 'package:plant_app/screens/home_screen.dart';
 import 'package:plant_app/screens/login_screen.dart';
 import 'package:plant_app/screens/main_screen.dart';
@@ -36,7 +37,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
     if (isAuthenticated) {
       Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginScreen()));
+          MaterialPageRoute(builder: (context) => AuthenticationWrapper()));
     }
   }
 
