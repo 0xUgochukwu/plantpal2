@@ -3,6 +3,7 @@ import 'package:plant_app/components/bottom_nav_bar.dart';
 import 'package:plant_app/constants.dart';
 import 'package:plant_app/screens/cart_screen.dart';
 import 'package:plant_app/screens/home_screen.dart';
+import 'package:plant_app/screens/profile_screen.dart';
 import 'package:plant_app/screens/signup_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     HomeScreen(),
     CartScreen(),
-    SignupScreen(),
+    ProfileScreen(),
   ];
 
   @override
