@@ -148,7 +148,7 @@ class _FormState extends State<Form> {
                   cursorColor:Colors.green,
                   controller: _username,
                   style: const TextStyle(
-                      color: Colors.white, fontFamily: 'SFUIDisplay'),
+                      color: Colors.black, fontFamily: 'SFUIDisplay'),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
                         vertical: height * 0.023, horizontal: width * 0.03),
@@ -198,7 +198,7 @@ class _FormState extends State<Form> {
                   cursorColor:Colors.green,
                   controller: _fullname,
                   style: const TextStyle(
-                      color: Colors.white, fontFamily: 'SFUIDisplay'),
+                      color: Colors.black, fontFamily: 'SFUIDisplay'),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
                         vertical: height * 0.023, horizontal: width * 0.03),
@@ -248,7 +248,7 @@ class _FormState extends State<Form> {
                   cursorColor:Colors.green,
                   controller: _address,
                   style: const TextStyle(
-                      color: Colors.white, fontFamily: 'SFUIDisplay'),
+                      color: Colors.black, fontFamily: 'SFUIDisplay'),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
                         vertical: height * 0.023, horizontal: width * 0.03),
