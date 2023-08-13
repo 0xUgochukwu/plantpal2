@@ -8,6 +8,8 @@ import 'package:plant_app/components/profile_pic.dart';
 import 'package:plant_app/constants.dart';
 import 'package:plant_app/models/update_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:plant_app/components/notification/custom_snack_bar.dart';
+import 'package:plant_app/components/notification/top_snack_bar.dart';
 
 import 'login_screen.dart';
 
@@ -207,6 +209,7 @@ class _FormState extends State<Form> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    bool status;
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
       padding: EdgeInsets.all(20.0),
@@ -380,15 +383,31 @@ class _FormState extends State<Form> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Color(0xFF184A2C)),
                     ),
-                    onPressed: () {
-                      if(_usernameController.text.isNotEmpty &&
-                          _fullnameController.text.isNotEmpty &&
-                          _addressController.text.isNotEmpty){
-                        //add it to database
-                        updateUserData(uid, _usernameController.text, _fullnameController.text, _addressController.text);
-                        //close the bottomsheet
-                        Navigator.of(context).pop();
+                    onPressed: () async {
+                      status = await updateUserData(
+                        uid,
+                        _usernameController.text,
+                        _fullnameController.text,
+                        _addressController.text,
+                      );
+                      Navigator.pop(context);
+                      
+                      if (status) {
+                        showTopSnackBar(
+                          Overlay.of(context)!,
+                          CustomSnackBar.success(
+                            message: "Profile Updated Successfully",
+                          ),
+                        );
+                      } else {
+                        showTopSnackBar(
+                          Overlay.of(context)!,
+                          CustomSnackBar.error(
+                            message: "Error Updating Profile",
+                          ),
+                        );
                       }
+                      
                     },
                   ),
                 ),
