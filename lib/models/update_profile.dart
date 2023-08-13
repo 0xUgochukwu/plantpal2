@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 Future<void> updateUserData(
     String uid,
-    String fullName,
     String username,
+    String fullName,
     String address,
     ) async {
   try {

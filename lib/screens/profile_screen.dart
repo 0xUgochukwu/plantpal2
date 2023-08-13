@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:plant_app/components/profile_menu.dart';
 import 'package:plant_app/components/profile_pic.dart';
 import 'package:plant_app/constants.dart';
+import 'package:plant_app/models/update_profile.dart';
 
 
 class ProfileScreen extends StatelessWidget {
@@ -67,12 +68,16 @@ class ProfileScreen extends StatelessWidget {
               text: "Edit Profile",
               icon: "images/icons/edit-profile.svg",
               press: () => {
-              showModalBottomSheet(context: context,isScrollControlled: true, builder: (__)=> const Form())
+              showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => Form(uid: uid),
+              )
               },
             ),
             ProfileMenu(
               text: "Payment Information",
-              icon: "images/icons/credit-card.svg",
+              icon: "images/icons/payment.svg",
               press: () {},
             ),
             ProfileMenu(
@@ -94,15 +99,23 @@ class ProfileScreen extends StatelessWidget {
 
 
 class Form extends StatefulWidget {
-  const Form({Key? key}) : super(key: key);
+  final String uid;
+  const Form({Key? key, required this.uid}) : super(key: key);
 
   @override
-  State<Form> createState() => _FormState();
+  State<Form> createState() => _FormState(uid);
 }
 
 class _FormState extends State<Form> {
-  final _title = TextEditingController();
-  final _amount = TextEditingController();
+
+  final String uid;
+  _FormState(this.uid);
+
+
+  final _username = TextEditingController();
+  final _fullname = TextEditingController();
+  final _address = TextEditingController();
+
   String _initialValue = 'Other';
 
   //
@@ -133,7 +146,7 @@ class _FormState extends State<Form> {
                 ),
                 TextField(
                   cursorColor:Colors.green,
-                  controller: _title,
+                  controller: _username,
                   style: const TextStyle(
                       color: Colors.white, fontFamily: 'SFUIDisplay'),
                   decoration: InputDecoration(
@@ -175,7 +188,7 @@ class _FormState extends State<Form> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          "Email",
+                          "Full Name",
                         ),
                       )
                     ],
@@ -183,7 +196,7 @@ class _FormState extends State<Form> {
                 ),
                 TextField(
                   cursorColor:Colors.green,
-                  controller: _title,
+                  controller: _fullname,
                   style: const TextStyle(
                       color: Colors.white, fontFamily: 'SFUIDisplay'),
                   decoration: InputDecoration(
@@ -200,7 +213,7 @@ class _FormState extends State<Form> {
                         color: Colors.green,
                       ),
                     ),
-                    labelText: 'Enter New Email',
+                    labelText: 'Enter Full Name',
                     labelStyle: GoogleFonts.poppins(
                       textStyle: const TextStyle(
                         color: Color(0xFF1E1E1E),
@@ -233,7 +246,7 @@ class _FormState extends State<Form> {
                 ),
                 TextField(
                   cursorColor:Colors.green,
-                  controller: _title,
+                  controller: _address,
                   style: const TextStyle(
                       color: Colors.white, fontFamily: 'SFUIDisplay'),
                   decoration: InputDecoration(
@@ -284,8 +297,9 @@ class _FormState extends State<Form> {
                       backgroundColor: MaterialStateProperty.all(Color(0xFF184A2C)),
                     ),
                     onPressed: () {
-                      if(_title.text != '' && _amount.text != ''){
+                      if(_username.text.isNotEmpty && _fullname.text.isNotEmpty && _address.text.isNotEmpty){
                         //add it to database
+                        updateUserData(uid, _username.text, _fullname.text, _address.text);
                         //close the bottomsheet
                         Navigator.of(context).pop();
                       }
