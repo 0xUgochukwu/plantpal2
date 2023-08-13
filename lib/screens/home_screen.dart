@@ -179,8 +179,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) {
+                                                        Plant? stalk;
                                                         return PlantDetails(
-                                                          plant: recommended[index],
+                                                          plant: plants?[index] ?? stalk ,
                                                         );
                                                       },
                                                     ),

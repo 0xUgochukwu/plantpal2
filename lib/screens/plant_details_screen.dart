@@ -6,7 +6,7 @@ import 'package:plant_app/models/plant.dart';
 class PlantDetails extends StatefulWidget {
   const PlantDetails({required this.plant, Key? key}) : super(key: key);
 
-  final Plant plant;
+  final Plant? plant;
 
   @override
   State<PlantDetails> createState() => _PlantDetailsState();
