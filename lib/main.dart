@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const AuthenticationWrapper(),
+
       routes: {
         FingerprintScreen.id: (context) => const FingerprintScreen(),
         LoginScreen.id: (context) => const LoginScreen(),

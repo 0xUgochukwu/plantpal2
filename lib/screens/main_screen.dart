@@ -21,24 +21,20 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  late int selectedIndex;
+  late int selectedIndex = 0;
 
-  late List<Widget> screens;
-  @override
-  void initState(){
-    super.initState();
-    selectedIndex = 0;
-    screens = [
-      HomeScreen(uid: widget.uid),
-      AdminScreen(),
+  List<Widget> buildScreens(String uid) {
+    return [
+      HomeScreen(uid: uid),
+      HomeScreen(uid: uid),
       CartScreen(),
-      ProfileScreen(uid: widget.uid),
+      ProfileScreen(uid: uid),
     ];
   }
 
-
   @override
   Widget build(BuildContext context, ) {
+    List<Widget> screens = buildScreens(widget.uid);
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
