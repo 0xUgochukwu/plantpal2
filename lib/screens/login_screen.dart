@@ -23,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String password = '';
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
 
   void _submitLoginForm(BuildContext context) {

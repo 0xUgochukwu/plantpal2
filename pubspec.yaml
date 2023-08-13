@@ -45,7 +45,7 @@ dependencies:
   flutter_svg:
 
   shared_preferences:
-  awesome_dialog:
+#  awesome_dialog:
   jwt_decode:
 
 

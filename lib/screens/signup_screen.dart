@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plant_app/components/authentication_button.dart';
@@ -7,36 +8,66 @@ import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 
 import '../auth/signup_auth.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
 
   static String id = 'SignupScreen';
-   final TextEditingController usernameController = TextEditingController();
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController usernameController = TextEditingController();
+
     final TextEditingController passwordController = TextEditingController();
+
   final TextEditingController ageController = TextEditingController();
+
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController confirmPasswordController = TextEditingController();
+
   final TextEditingController addressController = TextEditingController();
+
   final TextEditingController fullNameController = TextEditingController();
+
   final TextEditingController genderController = TextEditingController();
 
   void handleRegistration(BuildContext context, String email, String password, String fullName, String gender, String userName, String age, String address) {
     registerWithEmailAndPassword(context, email, password, fullName, gender, userName, age, address);
   }
 
-  void _submitForm(BuildContext context) {
-    String email = emailController.text;
-    String password = passwordController.text;
-    String fullName = fullNameController.text;
-    String userName = usernameController.text;
-    String age = ageController.text;
-    String address = addressController.text;
-    String gender = genderController.text;
+  void _submitForm(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      String email = emailController.text;
+      String password = passwordController.text;
+      String fullName = fullNameController.text;
+      String userName = usernameController.text;
+      String age = ageController.text;
+      String address = addressController.text;
+      String gender = genderController.text;
+      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-    handleRegistration(context, email, password, fullName, gender, userName, age, address);
+      final usernameQuery = await _firestore.collection('users').where(
+          'username', isEqualTo: userName.trim()).get();
+      if (usernameQuery.docs.isNotEmpty) {
+        print("Username is already taken. Please choose a different one.");
+      }
+      else {
+        handleRegistration(
+            context,
+            email,
+            password,
+            fullName,
+            gender,
+            userName,
+            age,
+            address);
+      }
+    }
   }
-
-
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -45,10 +76,8 @@ class SignupScreen extends StatelessWidget {
           Scaffold(
             body: SafeArea(
               child: SingleChildScrollView(
-                child: Container(
-                  // constraints: BoxConstraints(
-                  //   // maxHeight: MediaQuery.of(context).size.height,
-                  // ),
+                child: Form(
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
