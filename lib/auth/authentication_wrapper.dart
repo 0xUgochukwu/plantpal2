@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_app/screens/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
@@ -8,6 +9,8 @@ import '../screens/main_screen.dart';
 import '../screens/login_screen.dart';
 
 class AuthenticationWrapper extends StatefulWidget {
+  const AuthenticationWrapper({super.key});
+
   @override
   _AuthenticationWrapperState createState() => _AuthenticationWrapperState();
 }
@@ -77,3 +80,5 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     }
   }
 }
+
+

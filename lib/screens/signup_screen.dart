@@ -90,7 +90,7 @@ class SignupScreen extends StatelessWidget {
                             ),
                             CustomTextField(
                               hintText: 'Enter Username',
-                              icon: Icons.lock,
+                              icon: Icons.account_circle_rounded,
                               keyboardType: TextInputType.name,
                               onChanged: (value) {},
                               controller: usernameController,
@@ -103,7 +103,7 @@ class SignupScreen extends StatelessWidget {
                             ),
                               CustomTextField(
                                 hintText: 'Enter Gender',
-                                icon: Icons.lock,
+                                icon: Icons.person_outline_sharp,
                                 keyboardType: TextInputType.name,
                                 onChanged: (value) {},
                                 controller: genderController,
@@ -178,7 +178,7 @@ class SignupScreen extends StatelessWidget {
                             ),
                             CustomTextField(
                               hintText: 'Enter Age',
-                              icon: Icons.lock,
+                              icon: Icons.calendar_month,
                               keyboardType: TextInputType.name,
                               onChanged: (value) {},
                               controller: ageController,
@@ -202,7 +202,7 @@ class SignupScreen extends StatelessWidget {
                             ),
                             CustomTextField(
                               hintText: 'Enter Address',
-                              icon: Icons.lock,
+                              icon: Icons.location_searching_outlined,
                               keyboardType: TextInputType.name,
                               controller: addressController,
                               onChanged: (value) {},
@@ -263,6 +263,7 @@ class SignupScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                         child: AuthenticationButton(
@@ -271,7 +272,8 @@ class SignupScreen extends StatelessWidget {
                             _submitForm(context);
                           },
                         ),
-                      )
+                      ),
+                      SizedBox(height: 10)
                     ],
                   ),
                 ),
