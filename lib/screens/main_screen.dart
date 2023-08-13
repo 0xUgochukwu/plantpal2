@@ -3,6 +3,7 @@ import 'package:plant_app/components/bottom_nav_bar.dart';
 import 'package:plant_app/constants.dart';
 import 'package:plant_app/screens/cart_screen.dart';
 import 'package:plant_app/screens/home_screen.dart';
+import 'package:plant_app/screens/profile_screen.dart';
 import 'package:plant_app/screens/signup_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -21,18 +22,14 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late int selectedIndex;
 
-  late List<Widget> screens;
-  @override
-  void initState(){
-    super.initState();
-    selectedIndex = 0;
-    screens = [
-      HomeScreen(uid: widget.uid),
-      HomeScreen(uid: widget.uid),
-      CartScreen(),
-      SignupScreen(),
-    ];
-  }
+
+  List<Widget> screens = [
+    HomeScreen(),
+    HomeScreen(),
+    CartScreen(),
+    ProfileScreen(),
+  ];
+
 
   @override
   Widget build(BuildContext context, ) {

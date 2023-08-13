@@ -1,3 +1,5 @@
+package com.plant.pal.plant_pal;
+
 import android.os.Bundle;
 import io.flutter.app.FlutterFragmentActivity;
 import io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin;
