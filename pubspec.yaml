@@ -41,7 +41,12 @@ dependencies:
   firebase_core:
   firebase_auth:
   cloud_firestore:
+
   flutter_svg:
+
+  shared_preferences:
+  jwt_decode: ^0.3.1
+
 
 dev_dependencies:
   flutter_test:

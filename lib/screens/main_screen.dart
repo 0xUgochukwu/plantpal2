@@ -7,19 +7,21 @@ import 'package:plant_app/screens/profile_screen.dart';
 import 'package:plant_app/screens/signup_screen.dart';
 
 class MainScreen extends StatefulWidget {
+  final String uid;
   const MainScreen({
     required this.uid,
     Key? key}) : super(key: key);
 
   static const String id = 'MainScreen';
-  final String uid;
+
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int selectedIndex = 0;
+  late int selectedIndex;
+
 
   List<Widget> screens = [
     HomeScreen(),
@@ -27,6 +29,7 @@ class _MainScreenState extends State<MainScreen> {
     CartScreen(),
     ProfileScreen(),
   ];
+
 
   @override
   Widget build(BuildContext context, ) {

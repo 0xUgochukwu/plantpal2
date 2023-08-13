@@ -5,12 +5,18 @@ import 'package:plant_app/components/curve.dart';
 import 'package:plant_app/constants.dart';
 import 'package:plant_app/data.dart';
 import 'package:plant_app/screens/plant_details_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  final String uid;
   const HomeScreen({
+    required this.uid,
     Key? key}) : super(key: key);
 
   static const String id = 'HomeScreen';
+
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -18,165 +24,217 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selected = 0;
+  String? fullName;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> fetchUserDetails(String uid) async {
+    try {
+      DocumentSnapshot snapshot = await _firestore.collection('users').doc(uid).get();
+      if (snapshot.exists) {
+        // User details retrieved successfully
+        Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
+        fullName = userData['full_Name'];
 
-
+      } else {
+        print('User not found');
+      }
+    } catch (e) {
+      print('Error fetching user details: $e');
+    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    fetchUserDetails(widget.uid);
+  }
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token'); // Remove the stored token
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
+  }
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            children: [
-              Flexible(
-                flex: 5,
+
+
+    return FutureBuilder<void>(
+      future: fetchUserDetails(widget.uid),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(
+              child: Text('Error: ${snapshot.error}'),
+            ),
+          );
+        } else {
+          final userData = snapshot.data;
+
+          print('User Details: $fullName');
+          return SafeArea(
+            child: Scaffold(
+              body: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        child: Text(
-                          'Let\'s find your plants!',
-                          textAlign: TextAlign.start,
-                          style: GoogleFonts.poppins(
-                            color: kDarkGreenColor,
-                            fontSize: 32.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                    TextField(
-                      style: TextStyle(color: kDarkGreenColor),
-                      cursorColor: kDarkGreenColor,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: kGinColor,
-                        hintText: 'Search Plant',
-                        hintStyle: TextStyle(color: kGreyColor),
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: kDarkGreenColor,
-                          size: 26.0,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.mic),
-                          color: kDarkGreenColor,
-                          iconSize: 26.0,
-                          splashRadius: 20.0,
-                          onPressed: () {},
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: kGinColor),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: kGinColor),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: kGinColor),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 4.0),
-                    CategorySelector(
-                      selected: selected,
-                      categories: const [
-                        'Recommended',
-                        'Top',
-                        'Indoor',
-                        'Outdoor'
-                      ],
-                      onTap: (index) {
-                        setState(() {
-                          selected = index;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 9,
-                child: CustomScrollView(
-                  slivers: [
-                    SliverFillRemaining(
-                      hasScrollBody: false,
+                    Flexible(
+                      flex: 5,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            height: 290.0,
-                            alignment: Alignment.bottomCenter,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: SizedBox(
-                              height: 220.0,
-                              child: ListView.separated(
-                                clipBehavior: Clip.none,
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemCount: recommended.length,
-                                separatorBuilder: (context, index) {
-                                  return const SizedBox(width: 20.0);
-                                },
-                                itemBuilder: (context, index) {
-                                  return PlantCard(
-                                    plantType: recommended[index].plantType,
-                                    plantName: recommended[index].plantName,
-                                    plantPrice: recommended[index].plantPrice,
-                                    image: Image.asset(
-                                      recommended[index].image,
-                                      alignment: Alignment.topLeft,
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return PlantDetails(
-                                              plant: recommended[index],
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Text(
+                                'Let\'s find your plants! Mr. $fullName',
+                                textAlign: TextAlign.start,
+                                style: GoogleFonts.poppins(
+                                  color: kDarkGreenColor,
+                                  fontSize: 32.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                          TextField(
+                            style: TextStyle(color: kDarkGreenColor),
+                            cursorColor: kDarkGreenColor,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: kGinColor,
+                              hintText: 'Search Plant',
+                              hintStyle: TextStyle(color: kGreyColor),
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: kDarkGreenColor,
+                                size: 26.0,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.mic),
+                                color: kDarkGreenColor,
+                                iconSize: 26.0,
+                                splashRadius: 20.0,
+                                onPressed: logout,
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: kGinColor),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: kGinColor),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: kGinColor),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 4.0),
+                          CategorySelector(
+                            selected: selected,
+                            categories: const [
+                              'Recommended',
+                              'Top',
+                              'Indoor',
+                              'Outdoor'
+                            ],
+                            onTap: (index) {
+                              setState(() {
+                                selected = index;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 9,
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 290.0,
+                                  alignment: Alignment.bottomCenter,
+                                  child: SizedBox(
+                                    height: 220.0,
+                                    child: ListView.separated(
+                                      clipBehavior: Clip.none,
+                                      scrollDirection: Axis.horizontal,
+                                      shrinkWrap: true,
+                                      itemCount: recommended.length,
+                                      separatorBuilder: (context, index) {
+                                        return const SizedBox(width: 20.0);
+                                      },
+                                      itemBuilder: (context, index) {
+                                        return PlantCard(
+                                          plantType: recommended[index].plantType,
+                                          plantName: recommended[index].plantName,
+                                          plantPrice: recommended[index].plantPrice,
+                                          image: Image.asset(
+                                            recommended[index].image,
+                                            alignment: Alignment.topLeft,
+                                          ),
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) {
+                                                  return PlantDetails(
+                                                    plant: recommended[index],
+                                                  );
+                                                },
+                                              ),
                                             );
                                           },
-                                        ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.only(top: 20.0, bottom: 16.0),
+                                  child: Text(
+                                    'Recently Viewed',
+                                    style: TextStyle(
+                                      color: kDarkGreenColor,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 60.0,
+                                  child: ListView.separated(
+                                    itemCount: viewed.length,
+                                    clipBehavior: Clip.none,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return RecentlyViewedCard(
+                                        plantName: viewed[index].plantName,
+                                        plantInfo: viewed[index].plantInfo,
+                                        image: AssetImage(viewed[index].image),
                                       );
                                     },
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 20.0, bottom: 16.0),
-                            child: Text(
-                              'Recently Viewed',
-                              style: TextStyle(
-                                color: kDarkGreenColor,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 60.0,
-                            child: ListView.separated(
-                              itemCount: viewed.length,
-                              clipBehavior: Clip.none,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return RecentlyViewedCard(
-                                  plantName: viewed[index].plantName,
-                                  plantInfo: viewed[index].plantInfo,
-                                  image: AssetImage(viewed[index].image),
-                                );
-                              },
-                              separatorBuilder: (context, index) {
-                                return const SizedBox(width: 20.0);
-                              },
+                                    separatorBuilder: (context, index) {
+                                      return const SizedBox(width: 20.0);
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -185,13 +243,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 }
+
+
 
 class RecentlyViewedCard extends StatelessWidget {
   const RecentlyViewedCard({
