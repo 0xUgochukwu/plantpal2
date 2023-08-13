@@ -6,7 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:plant_app/components/profile_menu.dart';
 import 'package:plant_app/components/profile_pic.dart';
 import 'package:plant_app/constants.dart';
+import 'package:plant_app/models/update_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:plant_app/components/notification/custom_snack_bar.dart';
+import 'package:plant_app/components/notification/top_snack_bar.dart';
 
 import 'login_screen.dart';
 
@@ -17,7 +20,7 @@ class ProfileScreen extends StatelessWidget {
     required this.uid,
     super.key});
   String? fullName;
-  String? email;
+  String? address;
   String? userName;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<void> fetchUserDetails(String uid) async {
@@ -27,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
         // User details retrieved successfully
         Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
         fullName = userData['full_Name'];
-        email = userData['email'];
+        address = userData['address'];
         userName = userData['username'];
 
       } else {
@@ -104,9 +107,9 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 5),
-                   Center(
+                  Center(
                     child: Text(
-                      "${email}",
+                      "@" + "${userName}",
                       style: TextStyle(
                         color: Colors.green,
                         fontSize: 12.0,
@@ -118,8 +121,17 @@ class ProfileScreen extends StatelessWidget {
                   ProfileMenu(
                     text: "Edit Profile",
                     icon: "images/icons/edit-profile.svg",
-                    press: () => {
-                      showModalBottomSheet(context: context,isScrollControlled: true, builder: (__)=> const Form())
+                    press: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => Form(
+                          uid: uid,
+                          initialFullName: fullName,
+                          initialUsername: userName,
+                          initialAddress: address,
+                        ),
+                      );
                     },
                   ),
                   ProfileMenu(
@@ -144,22 +156,60 @@ class ProfileScreen extends StatelessWidget {
 
 
 class Form extends StatefulWidget {
-  const Form({Key? key}) : super(key: key);
+  final String uid;
+  final String? initialFullName;
+  final String? initialUsername;
+  final String? initialAddress;
+
+  Form({
+    Key? key,
+    required this.uid,
+    required this.initialFullName,
+    required this.initialUsername,
+    required this.initialAddress,
+  }) : super(key: key);
 
   @override
-  State<Form> createState() => _FormState();
+  State<Form> createState() => _FormState(uid, initialFullName, initialUsername, initialAddress);
 }
 
+
+
 class _FormState extends State<Form> {
-  final _title = TextEditingController();
-  final _amount = TextEditingController();
-  String _initialValue = 'Other';
+
+  final String uid;
+  final String? initialFullName;
+  final String? initialUsername;
+  final String? initialAddress;
+
+  late TextEditingController _usernameController;
+  late TextEditingController _fullnameController;
+  late TextEditingController _addressController;
+
+  _FormState(this.uid, this.initialFullName, this.initialUsername, this.initialAddress);
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController(text: initialUsername);
+    _fullnameController = TextEditingController(text: initialFullName);
+    _addressController = TextEditingController(text: initialAddress);
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _fullnameController.dispose();
+    _addressController.dispose();
+    super.dispose();
+  }
 
   //
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    bool status;
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
       padding: EdgeInsets.all(20.0),
@@ -183,9 +233,9 @@ class _FormState extends State<Form> {
                 ),
                 TextField(
                   cursorColor:Colors.green,
-                  controller: _title,
+                  controller: _usernameController,
                   style: const TextStyle(
-                      color: Colors.white, fontFamily: 'SFUIDisplay'),
+                      color: Colors.black, fontFamily: 'SFUIDisplay'),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
                         vertical: height * 0.023, horizontal: width * 0.03),
@@ -225,7 +275,7 @@ class _FormState extends State<Form> {
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          "Email",
+                          "Full Name",
                         ),
                       )
                     ],
@@ -233,9 +283,9 @@ class _FormState extends State<Form> {
                 ),
                 TextField(
                   cursorColor:Colors.green,
-                  controller: _title,
+                  controller: _fullnameController,
                   style: const TextStyle(
-                      color: Colors.white, fontFamily: 'SFUIDisplay'),
+                      color: Colors.black, fontFamily: 'SFUIDisplay'),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
                         vertical: height * 0.023, horizontal: width * 0.03),
@@ -250,7 +300,7 @@ class _FormState extends State<Form> {
                         color: Colors.green,
                       ),
                     ),
-                    labelText: 'Enter New Email',
+                    labelText: 'Enter Full Name',
                     labelStyle: GoogleFonts.poppins(
                       textStyle: const TextStyle(
                         color: Color(0xFF1E1E1E),
@@ -283,9 +333,9 @@ class _FormState extends State<Form> {
                 ),
                 TextField(
                   cursorColor:Colors.green,
-                  controller: _title,
+                  controller: _addressController,
                   style: const TextStyle(
-                      color: Colors.white, fontFamily: 'SFUIDisplay'),
+                      color: Colors.black, fontFamily: 'SFUIDisplay'),
                   decoration: InputDecoration(
                     contentPadding: EdgeInsets.symmetric(
                         vertical: height * 0.023, horizontal: width * 0.03),
@@ -333,12 +383,31 @@ class _FormState extends State<Form> {
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Color(0xFF184A2C)),
                     ),
-                    onPressed: () {
-                      if(_title.text != '' && _amount.text != ''){
-                        //add it to database
-                        //close the bottomsheet
-                        Navigator.of(context).pop();
+                    onPressed: () async {
+                      status = await updateUserData(
+                        uid,
+                        _usernameController.text,
+                        _fullnameController.text,
+                        _addressController.text,
+                      );
+                      Navigator.pop(context);
+                      
+                      if (status) {
+                        showTopSnackBar(
+                          Overlay.of(context)!,
+                          CustomSnackBar.success(
+                            message: "Profile Updated Successfully",
+                          ),
+                        );
+                      } else {
+                        showTopSnackBar(
+                          Overlay.of(context)!,
+                          CustomSnackBar.error(
+                            message: "Error Updating Profile",
+                          ),
+                        );
                       }
+                      
                     },
                   ),
                 ),
