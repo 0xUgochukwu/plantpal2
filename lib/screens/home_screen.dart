@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.7,
                               child: Text(
-                                'Let\'s find your plants! Mr. $userName',
+                                'Let\'s find your plants, $userName.',
                                 textAlign: TextAlign.start,
                                 style: GoogleFonts.poppins(
                                   color: kDarkGreenColor,
