@@ -23,6 +23,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late int selectedIndex;
 
+
   late List<Widget> screens;
   @override
   void initState(){
@@ -35,6 +36,7 @@ class _MainScreenState extends State<MainScreen> {
       ProfileScreen(uid: widget.uid),
     ];
   }
+
 
   @override
   Widget build(BuildContext context, ) {
