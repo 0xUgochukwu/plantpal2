@@ -42,11 +42,10 @@ dependencies:
   firebase_auth:
   cloud_firestore:
 
-  flutter_svg:
-
   shared_preferences:
-  jwt_decode: ^0.3.1
-
+#  awesome_dialog:
+  jwt_decode:
+  flutter_svg:
 
 dev_dependencies:
   flutter_test:
