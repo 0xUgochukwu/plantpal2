@@ -5,10 +5,7 @@ import 'package:plant_app/components/curve.dart';
 import 'package:plant_app/constants.dart';
 import 'package:plant_app/data.dart';
 import 'package:plant_app/screens/plant_details_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'login_screen.dart';
-
+import '../models/fetch_user_details.dart';
 class HomeScreen extends StatefulWidget {
   final String uid;
   const HomeScreen({
@@ -24,41 +21,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selected = 0;
-  String? fullName;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Future<void> fetchUserDetails(String uid) async {
-    try {
-      DocumentSnapshot snapshot = await _firestore.collection('users').doc(uid).get();
-      if (snapshot.exists) {
-        // User details retrieved successfully
-        Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
-        fullName = userData['full_Name'];
+  Map<String,dynamic>? userData;
+  String? userName;
 
-      } else {
-        print('User not found');
-      }
-    } catch (e) {
-      print('Error fetching user details: $e');
-    }
-  }
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    fetchUserDetails(widget.uid);
-  }
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token'); // Remove the stored token
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
   }
   @override
   Widget build(BuildContext context) {
 
-
-    return FutureBuilder<void>(
+    return FutureBuilder<Map<String,dynamic>>(
       future: fetchUserDetails(widget.uid),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -74,9 +47,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         } else {
-          final userData = snapshot.data;
-
-          print('User Details: $fullName');
+          userData = snapshot.data;
+          userName = userData!['username'];
+          print('User Details: $userData}');
           return SafeArea(
             child: Scaffold(
               body: Container(
@@ -94,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: SizedBox(
                               width: MediaQuery.of(context).size.width * 0.7,
                               child: Text(
-                                'Let\'s find your plants! Mr. $fullName',
+                                'Let\'s find your plants! Mr. $userName',
                                 textAlign: TextAlign.start,
                                 style: GoogleFonts.poppins(
                                   color: kDarkGreenColor,
@@ -122,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: kDarkGreenColor,
                                 iconSize: 26.0,
                                 splashRadius: 20.0,
-                                onPressed: logout,
+                                onPressed: (){},
                               ),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(color: kGinColor),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plant_app/screens/main_screen.dart';
-// import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -18,15 +18,15 @@ Future<void> login(BuildContext context, String email, String password) async {
     Navigator.push(context, MaterialPageRoute(builder: (context)=>MainScreen(uid: userData)));
   } on FirebaseAuthException catch (e) {
     print('Login failed: $e');
-            //   AwesomeDialog(
-            //       context: context,
-            //       dialogType: DialogType.error,
-            //       animType: AnimType.rightSlide,
-            //       title: 'Invalid Password',
-            //       desc: '${e.message}',
-            //       btnCancelOnPress: () {},
-            // btnOkOnPress: () {},
-            // ).show();
+              AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.error,
+                  animType: AnimType.rightSlide,
+                  title: 'Invalid Password',
+                  desc: '${e.message}',
+                  btnCancelOnPress: () {},
+            btnOkOnPress: () {},
+            ).show();
   }
 }
 Future<void> storeToken(String token) async {
