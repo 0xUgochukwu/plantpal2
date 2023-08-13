@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 
-Future<void> updateUserData(
+Future<bool> updateUserData(
     String uid,
     String username,
     String fullName,
@@ -15,7 +15,11 @@ Future<void> updateUserData(
       'username': username,
       'address': address,
     });
+    return true; // Success
   } catch (e) {
     print('Error updating user data: $e');
+    return false; // Failure
   }
 }
+
+
