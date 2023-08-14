@@ -70,8 +70,8 @@ class _PlantDetailsState extends State<PlantDetails> {
             color: kSpiritedGreen,
             padding: const EdgeInsets.only(top: 40.0),
             child: Hero(
-              tag: widget.plant.plantName,
-              child: Image.asset(widget.plant.image),
+              tag: widget.plant!.plantName,
+              child: Image.asset(widget.plant!.image),
             ),
           ),
           Container(
@@ -107,7 +107,7 @@ class _PlantDetailsState extends State<PlantDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.plant.plantName,
+                            widget.plant!.plantName,
                             textAlign: TextAlign.start,
                             style: GoogleFonts.poppins(
                               fontSize: 28.0,
@@ -119,7 +119,7 @@ class _PlantDetailsState extends State<PlantDetails> {
                           Row(
                             children: [
                               Text(
-                                '₹${widget.plant.plantPrice * quantity}0',
+                                '₹${widget.plant!.plantPrice * quantity}0',
                                 style: TextStyle(
                                   color: Colors.green.shade600,
                                   fontSize: 18.0,
@@ -128,7 +128,7 @@ class _PlantDetailsState extends State<PlantDetails> {
                               ),
                               const SizedBox(width: 6.0),
                               StarRating(
-                                stars: widget.plant.stars,
+                                stars: widget.plant!.stars,
                                 size: 16.0,
                                 onChanged: (value) {},
                               )
@@ -179,17 +179,17 @@ class _PlantDetailsState extends State<PlantDetails> {
                             children: [
                               PlantMetricsWidget(
                                 title: 'Height',
-                                value: widget.plant.metrics.height,
+                                value: widget.plant!.metrics.height,
                                 icon: Icons.height,
                               ),
                               PlantMetricsWidget(
                                 title: 'Humidiy',
-                                value: widget.plant.metrics.humidity,
+                                value: widget.plant!.metrics.humidity,
                                 icon: Icons.water_drop_outlined,
                               ),
                               PlantMetricsWidget(
                                 title: 'Width',
-                                value: widget.plant.metrics.width,
+                                value: widget.plant!.metrics.width,
                                 icon: Icons.width_full_outlined,
                               ),
                             ],
