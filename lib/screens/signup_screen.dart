@@ -48,14 +48,7 @@ class _SignupScreenState extends State<SignupScreen> {
       String age = ageController.text;
       String address = addressController.text;
       String gender = genderController.text;
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-      final usernameQuery = await _firestore.collection('users').where(
-          'username', isEqualTo: userName.trim()).get();
-      if (usernameQuery.docs.isNotEmpty) {
-        print("Username is already taken. Please choose a different one.");
-      }
-      else {
         handleRegistration(
             context,
             email,
@@ -65,7 +58,6 @@ class _SignupScreenState extends State<SignupScreen> {
             userName,
             age,
             address);
-      }
     }
   }
   @override
