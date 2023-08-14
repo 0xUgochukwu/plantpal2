@@ -26,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> buildScreens(String uid) {
     return [
       HomeScreen(uid: uid),
-      HomeScreen(uid: uid),
+      AdminScreen(),
       CartScreen(),
       ProfileScreen(uid: uid),
     ];
@@ -83,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
         },
         items: const [
           Icon(Icons.home),
-          Icon(Icons.image_search_outlined),
+          Icon(Icons.favorite),
           Icon(Icons.shopping_cart_outlined),
           Icon(Icons.person),
         ],

@@ -165,7 +165,7 @@ class _PlantDetailsState extends State<PlantDetails> {
                           padding:
                               const EdgeInsets.only(top: 10.0, bottom: 20.0),
                           child: Text(
-                            'The snake plant, commonly referred to as mother-in-law\'s tongue, is a resilient succulent that can grow anywhere between 6 inches to several feet. In addition to providing a bit of ambiance, snake plants have a number of health benefits, including: filter indoor air. remove toxic pollutants.',
+                            widget.plant!.plantDetails,
                             style: GoogleFonts.poppins(
                               color: kDarkGreenColor,
                             ),

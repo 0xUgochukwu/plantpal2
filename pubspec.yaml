@@ -46,6 +46,7 @@ dependencies:
 #  awesome_dialog:
   jwt_decode:
   flutter_svg:
+  flutter_keyboard_visibility:
 
 dev_dependencies:
   flutter_test:

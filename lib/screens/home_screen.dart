@@ -5,9 +5,12 @@ import 'package:plant_app/components/curve.dart';
 import 'package:plant_app/constants.dart';
 import 'package:plant_app/data.dart';
 import 'package:plant_app/screens/plant_details_screen.dart';
-import '../models/fetch_user_details.dart';
+import '../components/notification/custom_snack_bar.dart';
+import '../components/notification/top_snack_bar.dart';
+import '../repository/fetch_user_details.dart';
 import '../models/plant.dart';
 import '../repository/plant_repository.dart';
+import 'admindash.dart';
 class HomeScreen extends StatefulWidget {
   final String uid;
   const HomeScreen({
@@ -26,10 +29,37 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<String,dynamic>? userData;
   String? userName;
   List<Plant>? plants;
+  TextEditingController searchController = TextEditingController();
+  List<Plant> searchResults = [];
 
   @override
   void initState() {
     super.initState();
+  }
+  void _runSearch() async {
+    String searchText = searchController.text.trim();
+    if (searchText.isEmpty) {
+      setState(() {
+        searchResults.clear();
+      });
+    } else {
+      print(searchText);
+        List<Plant> results = await PlantRepository().fetchPlantsByName(
+            searchText);
+        print(results);
+        if (results.isEmpty) {
+          showTopSnackBar(
+            Overlay.of(context),
+            const CustomSnackBar.error(
+              message:
+              "No Plants Match Your Search",
+            ),
+          );
+        }
+        setState(() {
+          searchResults = results;
+        });
+    }
   }
 
   @override
@@ -38,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
       future: fetchUserDetails(widget.uid),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
             ),
@@ -82,8 +112,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           TextField(
+                            textInputAction: TextInputAction.search,
+                            onSubmitted: (String searchText){_runSearch();},
                             style: TextStyle(color: kDarkGreenColor),
                             cursorColor: kDarkGreenColor,
+                            controller: searchController,
                             decoration: InputDecoration(
                               filled: true,
                               fillColor: kGinColor,
@@ -99,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: kDarkGreenColor,
                                 iconSize: 26.0,
                                 splashRadius: 20.0,
-                                onPressed: (){},
+                                onPressed: _runSearch,
                               ),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(color: kGinColor),
@@ -119,10 +152,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           CategorySelector(
                             selected: selected,
                             categories: const [
-                              'Recommended',
-                              'Top',
-                              'Indoor',
-                              'Outdoor'
+                              'Plant',
+                              'Accessories'
                             ],
                             onTap: (index) {
                               setState(() {
@@ -148,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: SizedBox(
                                     height: 220.0,
                                     child: FutureBuilder<List<Plant>>(
-                                        future: PlantRepository().fetchAllPlants(),
+                                        future: searchResults.isNotEmpty || searchResults == null? Future.value(searchResults) : PlantRepository().fetchAllPlants(),
                                         builder: (context, snapshot) {
                                         if (snapshot.connectionState == ConnectionState.waiting) {
                                         return CircularProgressIndicator();
@@ -156,40 +187,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                         return Text('Error: ${snapshot.error}');
                                         } else {
                                         plants = snapshot.data!;
-                                        return ListView.separated(
-                                          clipBehavior: Clip.none,
-                                          scrollDirection: Axis.horizontal,
-                                          shrinkWrap: true,
-                                          itemCount: plants!.length,
-                                          separatorBuilder: (context, index) {
-                                            return const SizedBox(width: 20.0);
-                                          },
-                                          itemBuilder: (context, index) {
-                                            return
-                                              PlantCard(
-                                                plantType: plants?[index].plantType ?? '',
-                                                plantName: plants?[index].plantName ?? '',
-                                                plantPrice: plants?[index].plantPrice ?? 0,
-                                                image: Image.asset(
-                                                  recommended[index].image,
-                                                  alignment: Alignment.topLeft,
-                                                ),
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) {
-                                                        Plant? stalk;
-                                                        return PlantDetails(
-                                                          plant: plants?[index] ?? stalk ,
-                                                        );
-                                                      },
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                          },
-                                        );
+                                        if (searchResults.isEmpty && plants!.isEmpty) {
+                                        return Text('No Plants matching that name');
+                                        }
+                                        else {
+                                          return ListView.separated(
+                                            clipBehavior: Clip.none,
+                                            scrollDirection: Axis.horizontal,
+                                            shrinkWrap: true,
+                                            itemCount: plants!.length,
+                                            separatorBuilder: (context, index) {
+                                              return const SizedBox(
+                                                  width: 20.0);
+                                            },
+                                            itemBuilder: (context, index) {
+                                              return
+                                                PlantCard(
+                                                  plantType: plants?[index]
+                                                      .plantType ?? '',
+                                                  plantName: plants?[index]
+                                                      .plantName ?? '',
+                                                  plantPrice: plants?[index]
+                                                      .plantPrice ?? 0,
+                                                  image: Image.asset(
+                                                    recommended[index].image,
+                                                    alignment: Alignment
+                                                        .topLeft,
+                                                  ),
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) {
+                                                          Plant? stalk;
+                                                          return PlantDetails(
+                                                            plant: plants?[index] ??
+                                                                stalk,
+                                                          );
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                            },
+                                          );
+                                        }
                                         }
                                   },
                                   )
@@ -322,8 +364,8 @@ class PlantCard extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           Container(
-            height: 220.0,
-            width: 185.0,
+            height: 150.0,
+            width: 150.0,
             decoration: BoxDecoration(
               color: kGinColor,
               borderRadius: BorderRadius.circular(20.0),
@@ -333,29 +375,27 @@ class PlantCard extends StatelessWidget {
             ),
           ),
           Positioned(
-            // height: 240.0,
-            // width: 124.0,
             left: 8.0,
-            bottom: 70.0,
+            bottom: 90.0,
             child: Container(
               constraints:
-                  const BoxConstraints(maxWidth: 124.0, maxHeight: 240.0),
+              const BoxConstraints(maxWidth: 90.0, maxHeight: 90.0),
               child: Hero(tag: plantName, child: image),
             ),
           ),
           Positioned(
-            bottom: 0.0,
-            left: 0.0,
+            left: 50.0,
+            bottom: 90.0,
             child: Container(
-              width: 185,
-              height: 60.0,
+              width: 90,
+              height: 95.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
               ),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                child: Row(
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -420,6 +460,7 @@ class PlantCard extends StatelessWidget {
     );
   }
 }
+
 
 class CategorySelector extends StatelessWidget {
   const CategorySelector({

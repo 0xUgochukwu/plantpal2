@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-
 import 'package:plant_app/components/profile_menu.dart';
 import 'package:plant_app/components/profile_pic.dart';
 import 'package:plant_app/constants.dart';
@@ -10,9 +8,7 @@ import 'package:plant_app/models/update_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:plant_app/components/notification/custom_snack_bar.dart';
 import 'package:plant_app/components/notification/top_snack_bar.dart';
-
 import 'login_screen.dart';
-
 
 class ProfileScreen extends StatelessWidget {
   final String uid;
