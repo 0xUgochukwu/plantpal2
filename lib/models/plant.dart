@@ -4,12 +4,14 @@ class Plant {
   final double plantPrice;
   final String image;
   final double stars;
+  final String plantDetails;
   final PlantMetrics metrics;
 
   Plant({
     required this.plantType,
     required this.plantName,
     required this.plantPrice,
+    required this.plantDetails,
     required this.image,
     required this.stars,
     required this.metrics,
