@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plant_app/constants.dart';
@@ -45,11 +47,6 @@ class _PlantDetailsState extends State<PlantDetails> {
               backgroundColor: kDarkGreenColor,
               radius: 20.0,
               child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    favorite = !favorite;
-                  });
-                },
                 icon: Icon(
                   favorite == true
                       ? Icons.favorite_rounded
@@ -57,6 +54,27 @@ class _PlantDetailsState extends State<PlantDetails> {
                   color: Colors.white,
                   size: 24.0,
                 ),
+                onPressed: ()async {
+                  setState(() {
+                    favorite = !favorite;
+                  });
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    if (favorite) {
+    // Add plant UID to user's favorites
+    await userDoc.update({
+    'favorites': FieldValue.arrayUnion([widget.plant!.uid]),
+    });
+    } else {
+    // Remove plant UID from user's favorites
+    await userDoc.update({
+    'favorites': FieldValue.arrayRemove([widget.plant!.uid]),
+    });
+    }
+    }
+    },
               ),
             ),
           ],

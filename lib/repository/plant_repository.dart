@@ -13,7 +13,10 @@ class PlantRepository {
         Map<String, dynamic>? productData = documentSnapshot.data() as Map<String, dynamic>?;
         print("productData: $productData");
         if (productData != null) {
+          String documentUid = documentSnapshot.id;
+          print(documentUid);
           Plant plant = Plant(
+            uid: documentUid,
             plantDetails: productData['About'] ?? '',
             plantType: productData['category'] ?? '',
             plantName: productData['Name'] ?? '',
@@ -49,7 +52,10 @@ class PlantRepository {
         documentSnapshot.data() as Map<String, dynamic>?;
 
         if (productData != null) {
+          String documentUid = documentSnapshot.id;
+          print(documentUid);
           Plant plant = Plant(
+            uid: documentUid,
             plantDetails: productData['About'] ?? '',
             plantType: productData['category'] ?? '',
             plantName: productData['Name'] ?? '',

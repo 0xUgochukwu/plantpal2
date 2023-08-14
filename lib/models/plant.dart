@@ -1,4 +1,5 @@
 class Plant {
+  final String uid;
   final String plantType;
   final String plantName;
   final double plantPrice;
@@ -8,6 +9,7 @@ class Plant {
   final PlantMetrics metrics;
 
   Plant({
+    required this.uid,
     required this.plantType,
     required this.plantName,
     required this.plantPrice,

@@ -4,6 +4,7 @@ import 'package:plant_app/models/recently_viewed.dart';
 Future<List<Plant>>? allPlants;
 List<Plant> recommended = [
   Plant(
+    uid: '',
     plantType: 'Indoor',
     plantName: 'Snake Plant',
     plantPrice: 80.0,
@@ -13,6 +14,7 @@ List<Plant> recommended = [
     image: 'images/snake_plant.png',
   ),
   Plant(
+    uid: '',
     plantType: 'Indoor',
     plantName: 'Palm',
     plantPrice: 480.0,
@@ -22,6 +24,7 @@ List<Plant> recommended = [
     image: 'images/Palm.png',
   ),
   Plant(
+    uid: '',
     plantType: 'Outdoor',
     plantName: 'Ficus Alli',
     plantPrice: 600.0,
@@ -31,6 +34,7 @@ List<Plant> recommended = [
     image: 'images/ficuss_alii.png',
   ),
   Plant(
+    uid: '',
     plantType: 'Outdoor',
     plantName: 'Money Bonsai',
     plantPrice: 4000.0,
@@ -40,6 +44,7 @@ List<Plant> recommended = [
     image: 'images/money_bonsai.png',
   ),
   Plant(
+    uid: '',
     plantType: 'Outdoor',
     plantName: 'Juniper Bonsai',
     plantPrice: 2000.0,
@@ -59,6 +64,7 @@ List<ViewHistory> viewed = [
 List<CartItem> cartItems = [
   CartItem(
     Plant(
+      uid: '',
       plantType: 'Indoor',
       plantName: 'Calathea',
       plantPrice: 100,
@@ -69,40 +75,4 @@ List<CartItem> cartItems = [
     ),
     2,
   ),
-  CartItem(
-    Plant(
-      plantType: 'Indoor',
-      plantName: 'Cactus',
-      plantPrice: 100,
-      image: 'images/cactus.jpg',
-      stars: 3.5,
-      plantDetails: "The snake plant, commonly referred to as mother-in-law\'s tongue, is a resilient succulent that can grow anywhere between 6 inches to several feet. In addition to providing a bit of ambiance, snake plants have a number of health benefits, including: filter indoor air. remove toxic pollutants.",
-      metrics: PlantMetrics('', '', ''),
-    ),
-    2,
-  ),
-  CartItem(
-    Plant(
-      plantType: 'Indoor',
-      plantName: 'Calathea',
-      plantPrice: 100,
-      image: 'images/calathea.jpg',
-      stars: 3.5,
-      plantDetails: "The snake plant, commonly referred to as mother-in-law\'s tongue, is a resilient succulent that can grow anywhere between 6 inches to several feet. In addition to providing a bit of ambiance, snake plants have a number of health benefits, including: filter indoor air. remove toxic pollutants.",
-      metrics: PlantMetrics('', '', ''),
-    ),
-    2,
-  ),
-  CartItem(
-    Plant(
-      plantType: 'Indoor',
-      plantName: 'Calathea',
-      plantPrice: 100,
-      image: 'images/calathea.jpg',
-      stars: 3.5,
-      plantDetails: "The snake plant, commonly referred to as mother-in-law\'s tongue, is a resilient succulent that can grow anywhere between 6 inches to several feet. In addition to providing a bit of ambiance, snake plants have a number of health benefits, including: filter indoor air. remove toxic pollutants.",
-      metrics: PlantMetrics('', '', ''),
-    ),
-    2,
-  ),
-];
+  ];

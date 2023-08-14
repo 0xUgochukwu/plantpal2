@@ -122,13 +122,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               fillColor: kGinColor,
                               hintText: 'Search Plant',
                               hintStyle: TextStyle(color: kGreyColor),
-                              prefixIcon: Icon(
-                                Icons.search,
-                                color: kDarkGreenColor,
-                                size: 26.0,
-                              ),
                               suffixIcon: IconButton(
-                                icon: const Icon(Icons.mic),
+                                icon: const Icon(Icons.search),
                                 color: kDarkGreenColor,
                                 iconSize: 26.0,
                                 splashRadius: 20.0,

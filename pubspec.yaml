@@ -47,6 +47,7 @@ dependencies:
   jwt_decode:
   flutter_svg:
   flutter_keyboard_visibility:
+  image_picker:
 
 dev_dependencies:
   flutter_test:
